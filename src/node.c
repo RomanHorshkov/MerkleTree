@@ -14,34 +14,42 @@ int files_number = 0;
 // function that reads the data files and stores 
 // them in nodes
 void ReadFileData(void);
+void ReadFilesData(void);
 void UpdateFilesNumber(void);
 
+void GenerateNodesFromData();
+void GenerateNodesFromHashes
 
-void ReadFileData()
+
+void ReadFilesData()
 {
 	char filename[20]; // store the file name
 	for (int i = 1; i <= files_number; i++)
 	{
         	snprintf(filename, sizeof(filename), "block_%d.txt", i);
-		FILE *file = fopen(filename, "r");
-    		if (file == NULL)
-    		{
-        		perror(filename);  // Print specific file error
-        		return;
-    		}
-
-    		char buffer[256];
-    		printf("Contents of %s:\n", filename);
-
-    		// Read and print each line
-    		while (fgets(buffer, sizeof(buffer), file) != NULL)
-		{
-        		printf("%s", buffer);
-    		}
-    		printf("\n");
+		ReadFileData(filename);
 	}
 }
 
+void ReadFileData(char *filename)
+{
+
+	FILE *file = fopen(filename, "r");
+    	if (file == NULL)
+    	{
+        	perror(filename);  // Print specific file error
+        	return;
+    	}
+  	char buffer[256];
+    	printf("Contents of %s:\n", filename);
+
+    	// Read and print each line
+    	while (fgets(buffer, sizeof(buffer), file) != NULL)
+	{
+        	printf("%s", buffer);
+    	}
+    	printf("\n");
+}
 void UpdateFilesNumber(void)
 {
 
@@ -58,7 +66,8 @@ void UpdateFilesNumber(void)
     	while ((entry = readdir(dir)) != NULL)
 	{
         	// Check if file matches "block_*.txt"
-        	if (strncmp(entry->d_name, "block_", 6) == 0 && strstr(entry->d_name, ".txt"))
+        	if (strncmp(entry->d_name, "block_", 6) == 0
+				&& strstr(entry->d_name, ".txt"))
 		{
             		files_number++;
         	}

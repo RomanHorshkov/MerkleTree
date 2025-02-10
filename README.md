@@ -22,3 +22,12 @@ merkle_tree/
 ├── Makefile              # To compile everything
 └── README.md             # (Optional) For documentation
 
+Detailed Description:
+main.c
+- includes all the header files.
+- initialises the Merkle tree.
+- initialises the menu for merke tree usage.
+MAIN MENU: 
+    1 - check if root hash exists
+    2 - generate and compare root hashes
+    x - regenerate root hash
