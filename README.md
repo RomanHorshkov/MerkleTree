@@ -10,7 +10,7 @@ merkle_tree/
 │       ├── block3.txt
 │       └── block4.txt
 │
-├── include/              # Header files
+├── inc/              # Header files
 │   ├── node.h
 │   ├── merkle.h
 │   └── hash.h
@@ -33,3 +33,9 @@ MAIN MENU:
     1 - check if root hash exists
     2 - generate and compare root hashes
     x - regenerate root hash
+    q - quit
+
+Compilation:
+For now:
+<!-- gcc -Wall -Werror -g -Iinc main.c src/node.c -o merkle_tree  with debugging -->
+gcc -Wall -Werror -Iinc main.c src/node.c -o merkle_tree
