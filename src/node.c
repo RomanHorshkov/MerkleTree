@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <dirent.h> // for counting files
 #include <string.h>
+#include <openssl/sha.h>
 
 /*-----------------------------------*
  * PUBLIC VARIABLE DEFINITIONS
@@ -75,7 +76,7 @@ void ReadFilesData()
 	char filename[100]; // store the file name
 	for (int i = 1; i <= files_number; i++)
 	{
-        snprintf(filename, sizeof(filename), "/home/roman/C_book_KimNKing/merkle_tree/data/transactions/block_%d.txt", i);
+        snprintf(filename, sizeof(filename), "data/transactions/block_%d.txt", i);
 		ReadFileData(filename);
 	}
 }
@@ -104,7 +105,7 @@ void ReadFileData(char *filename)
 int UpdateFilesNumber(void)
 {
     int files_number = 0;
-    DIR *dir = opendir("/home/roman/C_book_KimNKing/merkle_tree/data/transactions/");
+    DIR *dir = opendir("data/transactions/");
     	
     if (dir == NULL)
     {
