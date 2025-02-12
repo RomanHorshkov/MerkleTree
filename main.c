@@ -86,7 +86,7 @@ bool DisplayMenu()
 	bool ret = true;
     char cmd; /* user command */
 
-    //ClearScreen();  /* Clear screen before displaying the menu */
+    ClearScreen();  /* Clear screen before displaying the menu */
 
     printf("===== Merkle Tree Menu =====\n");
     for (int i = 0; i < MAIN_MENU_ROWS_N; i++)
@@ -118,6 +118,8 @@ bool DisplayMenu()
             printf("Invalid cmd. Please try again.\n");
     }
 
+	printf("\n press enter to continue:");
+	getchar();
     return ret;
 }
 
