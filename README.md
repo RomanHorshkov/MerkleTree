@@ -2,11 +2,13 @@ Overall description and files architecture:
 
 merkle_tree/
 │
-├── data/                 # Folder to store data files
-│   ├── block1.txt
-│   ├── block2.txt
-│   ├── block3.txt
-│   └── block4.txt
+├── data/                # Folder to store data files
+│   ├─── root_hash.txt/  # Root hash 
+│   └─── tranasactions/  # Transactions list to hash
+│       ├── block1.txt
+│       ├── block2.txt
+│       ├── block3.txt
+│       └── block4.txt
 │
 ├── include/              # Header files
 │   ├── node.h
