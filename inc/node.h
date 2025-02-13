@@ -12,6 +12,7 @@
  * INCLUDE FILES
  *-----------------------------------*/
 #include <stdint.h> // for uin8_t
+#include <openssl/sha.h>
 
 
 /* Future work:
@@ -21,7 +22,7 @@
 /*-----------------------------------*
  * PUBLIC DEFINES
  *-----------------------------------*/
-#define HASH_SIZE 32 // hash size for sha 256
+/* None */
 
 /*-----------------------------------*
  * PUBLIC MACROS
@@ -38,7 +39,7 @@
  *-----------------------------------*/
 /* Node structure for the merkle tree */
 struct node_t {
-	uint8_t hash[HASH_SIZE];
+	unsigned char hash[SHA256_DIGEST_LENGTH];
 	struct node_t *parent;
 	struct node_t *rchild;
 	struct node_t *lchild;
@@ -59,6 +60,6 @@ struct node_t {
 /**
  * @brief try to hash :D 
  */
-void TryToHash(void);
+void TryToHash(unsigned char output[SHA256_DIGEST_LENGTH]);
 
 #endif /* MERKLE_NODE_H */

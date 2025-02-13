@@ -127,7 +127,8 @@ bool DisplayMenu()
 void GenerateMerkleTree()
 {
     printf("Initializing Merkle Tree...\n");
-    TryToHash();
+    unsigned char hash[SHA256_DIGEST_LENGTH];
+    TryToHash(hash);
 }
 
 void ClearScreen()

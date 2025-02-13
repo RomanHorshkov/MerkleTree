@@ -10,7 +10,7 @@ merkle_tree/
 │       ├── block3.txt
 │       └── block4.txt
 │
-├── inc/              # Header files
+├── inc/                  # Header files
 │   ├── node.h
 │   ├── merkle.h
 │   └── hash.h
@@ -22,7 +22,7 @@ merkle_tree/
 │
 ├── main.c                # Main program to build and test the Merkle tree
 ├── Makefile              # To compile everything
-└── README.md             # (Optional) For documentation
+└── README.md             # Documentation
 
 Detailed Description:
 main.c

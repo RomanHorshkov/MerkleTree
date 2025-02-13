@@ -1,6 +1,7 @@
 # Compiler and flags
 CC = gcc
 CFLAGS = -Wall -Werror -g -Iinc
+LDFLAGS = -lcrypto  # Add OpenSSL library
 
 # Source and object files
 SRC_FILES = main.c src/node.c
@@ -21,7 +22,7 @@ src/node.o: src/node.c
 
 # Link object files to create the final executable
 $(TARGET): $(OBJ_FILES)
-	$(CC) $(CFLAGS) $(OBJ_FILES) -o $(TARGET)
+	$(CC) $(CFLAGS) $(OBJ_FILES) -o $(TARGET) $(LDFLAGS)
 
 # Clean compiled files
 clean:
