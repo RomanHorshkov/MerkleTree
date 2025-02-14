@@ -8,7 +8,7 @@
 /*-----------------------------------*
  * INCLUDE FILES
  *-----------------------------------*/
-#include "inc/node.h"
+#include "inc/merkleTree.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -127,8 +127,7 @@ bool DisplayMenu()
 void GenerateMerkleTree()
 {
     printf("Initializing Merkle Tree...\n");
-    unsigned char hash[SHA256_DIGEST_LENGTH];
-    TryToHash(hash);
+    (void*)BuildMerkleTree();
 }
 
 void ClearScreen()

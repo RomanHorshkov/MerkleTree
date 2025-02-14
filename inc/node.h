@@ -40,6 +40,7 @@
 /* Node structure for the merkle tree */
 struct node_t {
 	unsigned char hash[SHA256_DIGEST_LENGTH];
+	uint8_t number;
 	struct node_t *parent;
 	struct node_t *rchild;
 	struct node_t *lchild;
@@ -49,17 +50,17 @@ struct node_t {
 /*-----------------------------------*
  * PUBLIC FUNCTION PROTOTYPES
  *-----------------------------------*/
-/**
- * @brief 
- * @param [out] d
- * @param [out] h
- * @param [out] m
- * @retval TRUE     Success
- * @retval FALSE    Error
- */
-/**
- * @brief try to hash :D 
- */
-void TryToHash(unsigned char output[SHA256_DIGEST_LENGTH]);
+// /**
+//  * @brief 
+//  * @param [out] d
+//  * @param [out] h
+//  * @param [out] m
+//  * @retval TRUE     Success
+//  * @retval FALSE    Error
+//  */
+// /**
+//  * @brief try to hash :D 
+//  */
+// void TryToHash(unsigned char output[SHA256_DIGEST_LENGTH]);
 
 #endif /* MERKLE_NODE_H */

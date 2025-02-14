@@ -11,10 +11,17 @@
 /*-----------------------------------*
  * INCLUDE FILES
  *-----------------------------------*/
+#include "../inc/node.h"                /* Node structure */
+#include <stdbool.h>                    /* booleans */
+#include <dirent.h>                     /* for counting files */
+#include <stdint.h>                     /* for uint8_t*/
+#include <string.h>                     /* for strings */
+#include <openssl/evp.h>                /* EVP API for SHA-256 */
 
 /*-----------------------------------*
  * PUBLIC DEFINES
  *-----------------------------------*/
+/* None */
 
 /*-----------------------------------*
  * PUBLIC MACROS
@@ -29,11 +36,11 @@
 /*-----------------------------------*
  * PUBLIC VARIABLE DECLARATIONS
  *-----------------------------------*/
-/* None */
+extern struct node_t **leave_nodes;      /* list of leaves pointers */
 
 /*-----------------------------------*
  * PUBLIC FUNCTION PROTOTYPES
  *-----------------------------------*/
-/* None */
+struct node_t ** BuildMerkleTree(void);
 
- #endif /* MERKLE_TREE_H */
+#endif /* MERKLE_TREE_H */
