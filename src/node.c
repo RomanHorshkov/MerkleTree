@@ -78,7 +78,7 @@ bool HashTwoNodes(struct node_t* lch, struct node_t* rch,
 
     // Compute the SHA-256 of the combined buffer.
     unsigned char new_hash[SHA256_DIGEST_LENGTH];
-    EVP_MD_CTX *mdctx = EVP_MD_CTX_new();
+    EVP_MD_CTX *mdctx = EVP_MD_CTX_new(); /* initializes digest context ctx */
     if (mdctx == NULL) {
         return false;
     }
