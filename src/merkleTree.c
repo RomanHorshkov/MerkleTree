@@ -51,12 +51,6 @@ bool HashFile(unsigned char hash[SHA256_DIGEST_LENGTH], const char *filename);
 void GenerateAndStoreLeaveNode(uint8_t fileNo);
 
 /**
- * @brief builds the merkleTree
- * does all the memory management
-*/
-struct node_t ** BuildMerkleTree(void);
-
-/**
  * @brief generates the correct filename
 */
 int8_t GenerateFilename(char *ret, uint8_t fileNo);
@@ -88,7 +82,28 @@ void PrintHash(const unsigned char hash[SHA256_DIGEST_LENGTH]);
 /*-----------------------------------*
  * PUBLIC FUNCTION DEFINITIONS
  *-----------------------------------*/
-/* None */
+struct node_t ** BuildMerkleTree(void)
+{
+    /* count the total amount of files */
+    uint8_t n_files = CountTransactionFiles();
+    /* allocate space in memory for the leave_nodes
+    array of struct node_t pointers */
+    leave_nodes = malloc(n_files * sizeof(struct node_t *));
+    if (leave_nodes == NULL)
+    {
+        perror("malloc failed for leave_nodes");
+        exit(EXIT_FAILURE);
+    }
+    for (uint8_t fileNo = 0; fileNo < n_files; fileNo++)
+    {
+        /* generate and store the leave node */
+        GenerateAndStoreLeaveNode(fileNo);
+    }
+
+    printf("\n\n\nMerkle Tree Successfully Built! \n\n\n");
+    PrintLeavesHashes(n_files);
+    return leave_nodes;
+}
 
 /*-----------------------------------*
  * PRIVATE FUNCTION DEFINITIONS
@@ -167,29 +182,6 @@ void GenerateAndStoreLeaveNode(uint8_t fileNo)
         leave_nodes[fileNo]->lchild = NULL;
         leave_nodes[fileNo]->number = fileNo;
     }
-}
-
-struct node_t ** BuildMerkleTree(void)
-{
-    /* count the total amount of files */
-    uint8_t n_files = CountTransactionFiles();
-    /* allocate space in memory for the leave_nodes
-    array of struct node_t pointers */
-    leave_nodes = malloc(n_files * sizeof(struct node_t *));
-    if (leave_nodes == NULL)
-    {
-        perror("malloc failed for leave_nodes");
-        exit(EXIT_FAILURE);
-    }
-    for (uint8_t fileNo = 0; fileNo < n_files; fileNo++)
-    {
-        /* generate and store the leave node */
-        GenerateAndStoreLeaveNode(fileNo);
-    }
-
-    printf("\n\n\nMerkle Tree Successfully Built! \n\n\n");
-    PrintLeavesHashes(n_files);
-    return leave_nodes;
 }
 
 int8_t GenerateFilename(char *ret, uint8_t fileNo)

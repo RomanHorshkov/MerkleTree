@@ -41,6 +41,11 @@ extern struct node_t **leave_nodes;      /* list of leaves pointers */
 /*-----------------------------------*
  * PUBLIC FUNCTION PROTOTYPES
  *-----------------------------------*/
+
+/**
+ * @brief builds the merkleTree
+ * does all the memory management
+*/
 struct node_t ** BuildMerkleTree(void);
 
 #endif /* MERKLE_TREE_H */
