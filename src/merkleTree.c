@@ -99,12 +99,8 @@ bool HashFile(unsigned char output[SHA256_DIGEST_LENGTH], const char *filename)
     bool ret = false;
     unsigned char buffer[BUFFER_SIZE];
     size_t bytesRead;
-
-    // static int files_number = 1;
-    // char filename[100]; // Store the file name
-    // /* Fill the filename */
-    // snprintf(filename, sizeof(filename), TRANSACTIONS_FOLDER "block_%d.txt", files_number++);
-
+    /* Clean output */
+    memset(output, 0, SHA256_DIGEST_LENGTH);
     /* Open the file */
     FILE *file = fopen(filename, "rb");
 
@@ -140,25 +136,30 @@ void GenerateAndStoreLeaveNode(uint8_t fileNo)
     unsigned char output_hash[SHA256_DIGEST_LENGTH];
     /* store the filename */
     char filename[FILE_NAME_MAX_LENGTH];
+    /* Allocate memory for a new node */
+    leave_nodes[fileNo] = malloc(sizeof(struct node_t));
+    /* Check malloc execution */
+    if (!leave_nodes[fileNo])
+    {
+        perror("malloc failed for a leaf node");
+        exit(EXIT_FAILURE);
+    }
     /* create the filename */
-    if (GenerateFilename(filename, fileNo) < 0)
+    else if (GenerateFilename(filename, fileNo) < 0)
     {
         perror("GenerateFilename in GenerateAndStoreLeaveNode failed");
+        exit(EXIT_FAILURE);
     }
+    /* Hash the file */
     else if (!HashFile(output_hash, filename))
     {
         perror("HashFile in GenerateAndStoreLeaveNode failed");
+        exit(EXIT_FAILURE);
     }
     else
     {
         /* if the hash have been successfully generated 
         store it in the leave_nodes */
-        /* leave_nodes used is a type struct node_t **
-        so by entering it with [fileNo] I get the struct node_t * */
-        leave_nodes[fileNo] = malloc(sizeof(struct node_t));
-        /* dereference to obtain struct node_t *, -> access ptr's values */
-        //*leave_nodes[fileNo]->hash = *output_hash;
-        
         memcpy(leave_nodes[fileNo]->hash, output_hash, SHA256_DIGEST_LENGTH);
         //memcpy(leave_nodes[fileNo]->number, fileNo, sizeof(uint8_t));
         leave_nodes[fileNo]->parent = NULL;
@@ -182,13 +183,6 @@ struct node_t ** BuildMerkleTree(void)
     }
     for (uint8_t fileNo = 0; fileNo < n_files; fileNo++)
     {
-        /* Allocate memory for a new node */
-        leave_nodes[fileNo] = malloc(sizeof(struct node_t));
-        if (leave_nodes[fileNo] == NULL)
-        {
-            perror("malloc failed for a leaf node");
-            exit(EXIT_FAILURE);
-        }
         /* generate and store the leave node */
         GenerateAndStoreLeaveNode(fileNo);
     }
