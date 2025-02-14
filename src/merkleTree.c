@@ -13,7 +13,7 @@
 /*-----------------------------------*
  * PUBLIC VARIABLE DEFINITIONS
  *-----------------------------------*/
-struct node_t **leave_nodes = NULL;  // Actual definition
+struct node_t ***nodes = NULL;                           /* Tree nodes definition */
 
 /*-----------------------------------*
  * PRIVATE DEFINES
@@ -39,16 +39,12 @@ struct node_t **leave_nodes = NULL;  // Actual definition
 /*-----------------------------------*
  * PRIVATE FUNCTION PROTOTYPES
  *-----------------------------------*/
-
+uint8_t AllocateSpace(void);
+void BuildTree(void);
 /**
  * @brief Hash a file
 */
 bool HashFile(unsigned char hash[SHA256_DIGEST_LENGTH], const char *filename);
-
-/**
- * @brief generates leaf node from input
-*/
-void GenerateAndStoreLeaveNode(uint8_t fileNo);
 
 /**
  * @brief generates the correct filename
@@ -66,11 +62,6 @@ uint8_t CountTransactionFiles(void);
 void PrintNode(struct node_t* node);
 
 /**
- * @brief prints the leaves hashes
-*/
-void PrintLeavesHashes(uint8_t n_files);
-
-/**
  * @brief prints a hash
 */
 void PrintHash(const unsigned char hash[SHA256_DIGEST_LENGTH]);
@@ -82,32 +73,117 @@ void PrintHash(const unsigned char hash[SHA256_DIGEST_LENGTH]);
 /*-----------------------------------*
  * PUBLIC FUNCTION DEFINITIONS
  *-----------------------------------*/
-struct node_t ** BuildMerkleTree(void)
+void BuildMerkleTree(void)
 {
-    /* count the total amount of files */
-    uint8_t n_files = CountTransactionFiles();
-    /* allocate space in memory for the leave_nodes
-    array of struct node_t pointers */
-    leave_nodes = malloc(n_files * sizeof(struct node_t *));
-    if (leave_nodes == NULL)
-    {
-        perror("malloc failed for leave_nodes");
-        exit(EXIT_FAILURE);
-    }
-    for (uint8_t fileNo = 0; fileNo < n_files; fileNo++)
-    {
-        /* generate and store the leave node */
-        GenerateAndStoreLeaveNode(fileNo);
-    }
-
+    AllocateSpace();
+    BuildTree();
     printf("\n\n\nMerkle Tree Successfully Built! \n\n\n");
-    PrintLeavesHashes(n_files);
-    return leave_nodes;
 }
 
 /*-----------------------------------*
  * PRIVATE FUNCTION DEFINITIONS
  *-----------------------------------*/
+
+uint8_t AllocateSpace(void)
+{
+    /* count the total amount of files */
+    uint8_t n_nodes = CountTransactionFiles();
+    /* reteurn total files */
+    uint8_t ret = n_nodes;
+    /* count the number of rows */
+    static uint8_t row = 0;
+
+    while (n_nodes > 1)
+    {
+        /* check if nodes odd */
+        if(n_nodes & 1)
+        {
+            /* incremen nodes counter */
+            printf("Number of node incremented from: %d to", n_nodes);
+            n_nodes++;
+            printf("%d\n", n_nodes);
+        }
+        printf("Number of row: %d\n", row);
+        printf("Number of nodes: %d\n", n_nodes);
+
+        /* struct node_t ***nodes, nodes[i] is struct node_t ** */
+        /* Allocate space for an array of pointers to
+        struct node_t of size n_nodes at the row */
+        nodes[row] = malloc(n_nodes * sizeof(struct node_t *));
+        if(nodes[row])
+        {
+            /* Allocate space for each node in the row */
+            for (uint8_t i = 0; i < n_nodes; i++)
+            {
+                nodes[row][i] = malloc(sizeof(struct node_t));
+                /* check node validity */
+                if (!nodes[row][i])
+                {
+                    perror("malloc failed for node allocation");
+                    exit(EXIT_FAILURE);
+                }
+                else
+                {
+
+                }
+            }
+            /* increment rows counter */
+            row++;
+            /* half the n_nodes counter */
+            n_nodes /= 2;
+        }
+        else
+        {
+            perror("malloc failed for row allocation");
+            exit(EXIT_FAILURE);
+        }
+    }
+    return ret;
+}
+
+void BuildTree(void)
+{
+    /* store the filename */
+    char filename[FILE_NAME_MAX_LENGTH];
+
+    /* store the file output hash */
+    unsigned char output_hash[SHA256_DIGEST_LENGTH];
+
+    uint8_t tot_files = CountTransactionFiles();
+
+        /*
+
+    keep working from here!!!
+    keep implementing the while/for loop in the tree.
+        
+        */
+    for (size_t fileNo = 0; fileNo < (size_t)tot_files; fileNo++)
+    {
+        /* create the filename */
+        if (GenerateFilename(filename, fileNo) < 0)
+        {
+            perror("GenerateFilename in BuildTree failed");
+            exit(EXIT_FAILURE);
+        }
+        /* Hash the file */
+        else if (!HashFile(output_hash, filename))
+        {
+            perror("HashFile in BuildTree failed");
+            exit(EXIT_FAILURE);
+        }
+        else
+        {
+            /* if the hash have been successfully generated 
+            store it in the nodes */
+            memcpy(nodes[0][fileNo]->hash, output_hash, SHA256_DIGEST_LENGTH);
+            nodes[0][fileNo]->parent = NULL;
+            nodes[0][fileNo]->rchild = NULL;
+            nodes[0][fileNo]->lchild = NULL;
+            nodes[0][fileNo]->number = fileNo;
+        }
+    }
+}
+
 
 bool HashFile(unsigned char output[SHA256_DIGEST_LENGTH], const char *filename)
 {
@@ -145,45 +221,6 @@ bool HashFile(unsigned char output[SHA256_DIGEST_LENGTH], const char *filename)
     return ret;
 }
 
-void GenerateAndStoreLeaveNode(uint8_t fileNo)
-{
-    /* store the file output hash */
-    unsigned char output_hash[SHA256_DIGEST_LENGTH];
-    /* store the filename */
-    char filename[FILE_NAME_MAX_LENGTH];
-    /* Allocate memory for a new node */
-    leave_nodes[fileNo] = malloc(sizeof(struct node_t));
-    /* Check malloc execution */
-    if (!leave_nodes[fileNo])
-    {
-        perror("malloc failed for a leaf node");
-        exit(EXIT_FAILURE);
-    }
-    /* create the filename */
-    else if (GenerateFilename(filename, fileNo) < 0)
-    {
-        perror("GenerateFilename in GenerateAndStoreLeaveNode failed");
-        exit(EXIT_FAILURE);
-    }
-    /* Hash the file */
-    else if (!HashFile(output_hash, filename))
-    {
-        perror("HashFile in GenerateAndStoreLeaveNode failed");
-        exit(EXIT_FAILURE);
-    }
-    else
-    {
-        /* if the hash have been successfully generated 
-        store it in the leave_nodes */
-        memcpy(leave_nodes[fileNo]->hash, output_hash, SHA256_DIGEST_LENGTH);
-        //memcpy(leave_nodes[fileNo]->number, fileNo, sizeof(uint8_t));
-        leave_nodes[fileNo]->parent = NULL;
-        leave_nodes[fileNo]->rchild = NULL;
-        leave_nodes[fileNo]->lchild = NULL;
-        leave_nodes[fileNo]->number = fileNo;
-    }
-}
-
 int8_t GenerateFilename(char *ret, uint8_t fileNo)
 {
     return snprintf(ret, FILE_NAME_MAX_LENGTH, "%sblock_%u.txt", TRANSACTIONS_FOLDER, fileNo);
@@ -211,17 +248,9 @@ uint8_t CountTransactionFiles()
 void PrintNode(struct node_t* node)
 {
     printf("Node N: %d\n", node->number);
-    printf("Hash:");
-    printf("parent: %p", node->parent);
-}
-
-void PrintLeavesHashes(uint8_t n_files)
-{
-    for (uint8_t i = 0; i < n_files; i++)
-    {
-        PrintNode(leave_nodes[i]);
-        PrintHash(leave_nodes[i]->hash);
-    }
+    printf("Hash: ");
+    PrintHash(node->hash);
+    printf("parent: %p\n", node->parent);
 }
 
 void PrintHash(const unsigned char hash[SHA256_DIGEST_LENGTH])

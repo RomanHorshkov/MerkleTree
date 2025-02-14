@@ -36,7 +36,7 @@
 /*-----------------------------------*
  * PUBLIC VARIABLE DECLARATIONS
  *-----------------------------------*/
-extern struct node_t **leave_nodes;      /* list of leaves pointers */
+extern struct node_t *** nodes;                 /* nodes of the tree */
 
 /*-----------------------------------*
  * PUBLIC FUNCTION PROTOTYPES
@@ -46,6 +46,6 @@ extern struct node_t **leave_nodes;      /* list of leaves pointers */
  * @brief builds the merkleTree
  * does all the memory management
 */
-struct node_t ** BuildMerkleTree(void);
+void BuildMerkleTree(void);
 
 #endif /* MERKLE_TREE_H */

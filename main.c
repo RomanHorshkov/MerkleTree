@@ -127,7 +127,7 @@ bool DisplayMenu()
 void GenerateMerkleTree()
 {
     printf("Initializing Merkle Tree...\n");
-    (void*)BuildMerkleTree();
+    BuildMerkleTree();
 }
 
 void ClearScreen()
