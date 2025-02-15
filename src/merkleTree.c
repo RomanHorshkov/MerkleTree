@@ -41,6 +41,8 @@ struct node_t ***nodes = NULL;                           /* Tree nodes definitio
  *-----------------------------------*/
 uint8_t AllocateSpace(void);
 void BuildTree(void);
+void GenerateLeaveNodes(void);
+void GenerateAllOtherNodes(void);
 /**
  * @brief Hash a file
 */
@@ -77,7 +79,7 @@ void BuildMerkleTree(void)
 {
     AllocateSpace();
     BuildTree();
-    printf("\n\n\nMerkle Tree Successfully Built! \n\n\n");
+    printf("\nMerkle Tree Successfully Built!\n");
 }
 
 /*-----------------------------------*
@@ -91,9 +93,10 @@ uint8_t AllocateSpace(void)
     /* reteurn total files */
     uint8_t ret = n_nodes;
     /* count the number of rows */
-    static uint8_t row = 0;
+    uint8_t row = 0;
 
-    while (n_nodes > 1)
+
+    while (n_nodes >= 1)
     {
         /* check if nodes odd */
         if(n_nodes & 1)
@@ -122,10 +125,6 @@ uint8_t AllocateSpace(void)
                     perror("malloc failed for node allocation");
                     exit(EXIT_FAILURE);
                 }
-                else
-                {
-
-                }
             }
             /* increment rows counter */
             row++;
@@ -143,6 +142,13 @@ uint8_t AllocateSpace(void)
 
 void BuildTree(void)
 {
+
+    GenerateLeaveNodes();
+    GenerateAllOtherNodes();
+}
+
+void GenerateLeaveNodes(void)
+{
     /* store the filename */
     char filename[FILE_NAME_MAX_LENGTH];
 
@@ -151,24 +157,18 @@ void BuildTree(void)
 
     uint8_t tot_files = CountTransactionFiles();
 
-        /*
-
-    keep working from here!!!
-    keep implementing the while/for loop in the tree.
-        
-        */
     for (size_t fileNo = 0; fileNo < (size_t)tot_files; fileNo++)
     {
         /* create the filename */
         if (GenerateFilename(filename, fileNo) < 0)
         {
-            perror("GenerateFilename in BuildTree failed");
+            perror("GenerateLeaveNodes(): GenerateFilename failed");
             exit(EXIT_FAILURE);
         }
         /* Hash the file */
         else if (!HashFile(output_hash, filename))
         {
-            perror("HashFile in BuildTree failed");
+            perror("GenerateLeaveNodes(): HashFile failed");
             exit(EXIT_FAILURE);
         }
         else
@@ -182,8 +182,38 @@ void BuildTree(void)
             nodes[0][fileNo]->number = fileNo;
         }
     }
+    /* Check if nodes odd */
+    if (tot_files & 1)
+    {
+        /* copy the node to the end */
+        printf("GenerateLeaveNodes(): Adding extra node to the end\n");
+        memcpy(nodes[0][tot_files], nodes[0][tot_files - 1], sizeof(struct node_t));
+    }
+    
 }
 
+void GenerateAllOtherNodes(void)
+{
+    /* 
+    Start with row 0
+    
+    Start with nodes i = 0 and j = i + 1;
+    */
+
+    /* Save starting index */
+    struct node_t ***start_idx = nodes;
+
+    /* *nodes points to the first row of nodes_t * */
+    /* ** nodes points to the first element of first row */
+    while (!**nodes)
+    {
+        PrintNode(**nodes++);
+    }
+    
+    /* restore nodes index */
+    nodes = start_idx;
+    
+}
 
 bool HashFile(unsigned char output[SHA256_DIGEST_LENGTH], const char *filename)
 {
@@ -248,9 +278,10 @@ uint8_t CountTransactionFiles()
 void PrintNode(struct node_t* node)
 {
     printf("Node N: %d\n", node->number);
-    printf("Hash: ");
     PrintHash(node->hash);
     printf("parent: %p\n", node->parent);
+    printf("lchild: %p\n", node->rchild);
+    printf("rchild: %p\n", node->lchild);
 }
 
 void PrintHash(const unsigned char hash[SHA256_DIGEST_LENGTH])
