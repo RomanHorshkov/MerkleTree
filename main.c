@@ -118,8 +118,12 @@ bool DisplayMenu()
             printf("Invalid cmd. Please try again.\n");
     }
 
-	printf("\n press enter to continue:");
-	getchar();
+    if(cmd != 'q')
+    {
+        printf("\n press enter to continue:");
+        getchar();
+    }
+    ClearScreen();  /* Clear screen before exiting */
     return ret;
 }
 

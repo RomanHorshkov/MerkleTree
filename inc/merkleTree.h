@@ -36,7 +36,7 @@
 /*-----------------------------------*
  * PUBLIC VARIABLE DECLARATIONS
  *-----------------------------------*/
-extern struct node_t *** nodes;                 /* nodes of the tree */
+extern struct node_t ***nodes;                 /* nodes of the tree */
 
 /*-----------------------------------*
  * PUBLIC FUNCTION PROTOTYPES
