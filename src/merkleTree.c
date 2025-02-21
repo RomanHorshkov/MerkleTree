@@ -95,37 +95,85 @@ void BuildMerkleTree(void)
  *-----------------------------------*/
 void SetRelations(struct node_t ***nodes_ptr)
 {
-    /* set the top nodes (leaves)'s children to null */
+    bool no_children = true;
+    struct node_t ***row; // point to array of ptrs node_t*
+    struct node_t **col; // point to ptr node_t*
+
     
-    int row_idx = 0;
-    
-    /* while node_t ** is not null */
-    while (*nodes_ptr)
+    if (*nodes_ptr)
     {
-
-        struct node_t **row_nodes = nodes_ptr;
-        struct node_t **next_row_nodes = nodes_ptr + 1;
-
-        /* while node_t * is not null */
-        while (*row_nodes)
+        row = nodes_ptr;
+        /* get advantage of the null terminated array */
+        while (*row != NULL)
         {
-            /* When at leaves */
-            if (row_idx == 0)
+            col = row[0]; // pointer to ptr node_t* in the row array
+            /* get advantage of the null terminated array */
+            while (*col != NULL)
             {
-                (*row_nodes)->lchild = NULL;
-                (*row_nodes)->rchild = NULL;
+                /* calculate the distance on row */
+                int dist_r = col - row[0];
+    
+                printf("\nAnalysed node:\n");
+                PrintNode(*col);
+    
+                /* set parent */
+                /* check if anything above exists, using the
+                null terminated array */
+                if (row[1])
+                {
+                    /* the index is this distance / 2 
+                    0/2 = 0, 1/2 = 0, 2/2 = 1, 3/2 = 1 etc etc
+                    &row[+1][dist_r/2] -> take upper column, that node*/
+                    printf("Set as parent: \n");
+                    PrintNode(row[1][dist_r/2]);
+                    (*col)->parent = row[1][dist_r/2];
+                }
+                /* set children */
+    
+                /* if leaves */
+                if (no_children)
+                {
+                    (*col)->lchild = NULL;
+                    (*col)->rchild = NULL;
+                }
+                else
+                {
+                    /* the index is this distance / 2 
+                    0*2 = 0, 1*2 = 2, 2*2 = 4, 3*2 = 6 etc etc
+                    &row[-1][dist_r/2] -> take upper column, that node*/
+                    /* The left child could NOT EXIST */
+                    if (row[-1][dist_r*2])
+                    {
+                        (*col)->lchild = row[-1][dist_r*2];
+                        printf("Set as lchild: \n");
+                        PrintNode(row[-1][dist_r*2]);
+                        /* The right child could NOT EXIST */
+                        if (row[-1][dist_r*2 + 1])
+                        {
+                            (*col)->rchild = row[-1][dist_r*2 + 1];
+                            printf("Set as rchild: \n");
+                            PrintNode(row[-1][dist_r*2 + 1]);
+                        }
+                        else
+                        {
+                            printf("NO RCHILDREN SET! \n");
+                        }
+                    }
+                    else
+                    {
+                        printf("NO LCHILDREN SET! \n");
+                        printf("NO RCHILDREN SET! \n");
+                    }
+                }
+
+                col++;
             }
-            
-            /* this sets the parent from upper row 
-            and correct index */
-            (*row_nodes)->parent = nodes_ptr[row_idx + 1][(*row_nodes)->number / 2];
-            PrintNode(*row_nodes);
-            row_nodes++;
+
+            no_children = false;
+            row++;
         }
-        nodes_ptr++;
     }
     
-
 }
 
 void HashNodes(struct node_t ***nodes_ptr)

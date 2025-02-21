@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Debug merkleTree (WSL)",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "${workspaceFolder}/merkleTree", 
+        "cwd": "${workspaceFolder}",
+        "MIMode": "gdb",
+        "miDebuggerPath": "/usr/bin/gdb", 
+        "externalConsole": false
+      }
+    ]
+  }
+  
