@@ -46,13 +46,14 @@
 void AllocateAllNodes(struct node_t ****nodes_ptr,
                     int *nodes_arr, int tree_levels);
 
-                    
-void PrintMerkleTree(struct node_t ***nodes);
 
 void SetRelations(struct node_t ***nodes_ptr);
 
 void HashNodes(struct node_t ***nodes_ptr);
 
+void PrintMerkleTree(struct node_t ***nodes);
+
+void PrintNode(struct node_t *node);
 /*-----------------------------------*
  * PRIVATE VARIABLES
  *-----------------------------------*/
@@ -79,8 +80,10 @@ void BuildMerkleTree(void)
     if(nodes)
     {
         /* Set nodes relations */
+        printf("set relations \n");
         SetRelations(nodes);
         /* Hash all the nodes */
+        printf("HashNodes \n");
         HashNodes(nodes);
     }
 
@@ -92,18 +95,39 @@ void BuildMerkleTree(void)
  *-----------------------------------*/
 void SetRelations(struct node_t ***nodes_ptr)
 {
-    struct node_t **parents = nodes_ptr[1];
-    struct node_t *idx = (*nodes_ptr)[0];
-    int dist = idx - (*nodes_ptr)[0];
-    while (idx)
+    /* set the top nodes (leaves)'s children to null */
+    
+    int row_idx = 0;
+    
+    /* while node_t ** is not null */
+    while (*nodes_ptr)
     {
-        idx->lchild = NULL;
-        idx->rchild = NULL;
-        idx->parent = parents[dist/2];
-        dist = idx - (*nodes_ptr)[0];
+
+        struct node_t **row_nodes = nodes_ptr;
+        struct node_t **next_row_nodes = nodes_ptr + 1;
+
+        /* while node_t * is not null */
+        while (*row_nodes)
+        {
+            /* When at leaves */
+            if (row_idx == 0)
+            {
+                (*row_nodes)->lchild = NULL;
+                (*row_nodes)->rchild = NULL;
+            }
+            
+            /* this sets the parent from upper row 
+            and correct index */
+            (*row_nodes)->parent = nodes_ptr[row_idx + 1][(*row_nodes)->number / 2];
+            PrintNode(*row_nodes);
+            row_nodes++;
+        }
+        nodes_ptr++;
     }
     
+
 }
+
 void HashNodes(struct node_t ***nodes_ptr)
 {   
 
@@ -191,10 +215,21 @@ void PrintMerkleTree(struct node_t ***nodes)
         // Print each node in this level.
         for (int i = 0; i < count; i++)
         {
-            printf("  Node %d: number = %d, hash = ", i, nodes[level][i]->number);
+            printf("Node %p %d: n = %d, hash = ", nodes[level][i], i, nodes[level][i]->number);
             PrintHashHex(nodes[level][i]->hash);
         }
         printf("\n");
         level++;
+    }
+}
+
+void PrintNode(struct node_t *node)
+{
+    if (node)
+    {
+        printf("Node %p: number = %d, hash = ", node, node->number);
+        PrintHashHex(node->hash);
+        printf("rchild = %p, lchild = %p, parent = %p\n",
+                node->rchild, node->lchild, node->parent);
     }
 }
