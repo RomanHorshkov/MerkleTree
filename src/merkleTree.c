@@ -138,8 +138,6 @@ void BuildMerkleTree(const char *folder)
         // printf("HashNodes \n");
         // HashNodes(nodes);
     }
-
-
 }
 
 /*-----------------------------------*

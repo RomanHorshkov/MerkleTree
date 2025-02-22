@@ -9,9 +9,6 @@
  * INCLUDE FILES
  *-----------------------------------*/
 #include "inc/merkleTree.h"
-#ifdef TEST_BUILD
-#include "inc/tests.h"
-#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -80,13 +77,6 @@ char *mainMenu[MAIN_MENU_ROWS_N] =
 
 int main(int argc, char **argv)
 {
-#ifdef TEST_BUILD
-    if (argc > 1 && strcmp(argv[1], "--test") == 0)
-    {
-        RunMerkleTreeTests();
-    }
-    else
-#endif
     {
         while(DisplayMenu()){};	
     }
