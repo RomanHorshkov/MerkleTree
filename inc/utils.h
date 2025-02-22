@@ -5,8 +5,9 @@
  * @brief utilities: hashing
  */
 
- #ifndef UTILITIES_MERKLE_TREE_H
- #define UTILITIES_MERKLE_TREE_H
+
+#ifndef UTILITIES_MERKLE_TREE_H
+#define UTILITIES_MERKLE_TREE_H
 
 
 /*-----------------------------------*
@@ -70,7 +71,7 @@ void PrintHashHex(const unsigned char hash[SHA256_DIGEST_LENGTH]);
  */
 void PrintHashBinary(const unsigned char hash[SHA256_DIGEST_LENGTH]);
 
-int CountFilesInFolder(char *folder_path);
+int CountFilesInFolder(const char *folder_path);
 int NodesNumberArrayFromFile(int **nodes_number_arr, int n_files);
 void pIntArr(int *arr, int size);
 

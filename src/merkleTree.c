@@ -9,6 +9,7 @@
  * INCLUDE FILES
  *-----------------------------------*/
 #include "../inc/merkleTree.h"
+#include "../inc/tests.h"
 #include "../inc/utils.h"
 
 /*-----------------------------------*
@@ -21,13 +22,11 @@
 /*-----------------------------------*
  * PRIVATE DEFINES
  *-----------------------------------*/
-/* None */
 
 /* Define file reading buffer size */
 #define BUFFER_SIZE 4096
 
 /* Define transaction data folder */
-#define TRANSACTIONS_FOLDER "data/transactions/"
 #define FILE_NAME_MAX_LENGTH 50
 
 /*-----------------------------------*
@@ -43,17 +42,69 @@
 /*-----------------------------------*
  * PRIVATE FUNCTION PROTOTYPES
  *-----------------------------------*/
-void AllocateAllNodes(struct node_t ****nodes_ptr,
-                    int *nodes_arr, int tree_levels);
+/**
+ * @brief Allocates memory for all nodes in the Merkle tree.
+ *
+ * This function creates a two-dimensional (matrix) array of pointers to node_t structures,
+ * based on the provided number of nodes per level and the total number of levels in the tree.
+ * The memory for each row (level) is allocated and initialized, and a NULL pointer is placed at
+ * the end of each row for easy iteration.
+ *
+ * @param nodes_ptr Pointer to the pointer that will hold the allocated tree nodes matrix.
+ * @param nodes_arr An array containing the number of nodes at each level.
+ * @param tree_levels The total number of levels in the Merkle tree.
+ */
+void AllocateAllNodes(struct node_t ****nodes_ptr, int *nodes_arr, int tree_levels);
 
 
+/**
+ * @brief Establishes the relationships between nodes in the Merkle tree.
+ *
+ * This function sets up the parent-child connections among nodes in the Merkle tree.
+ * It assumes that the nodes are stored in a matrix where each row represents a level of the tree.
+ * The parent of each node is determined by the node's position, and the corresponding child pointers
+ * (left and right) are set accordingly.
+ *
+ * @param nodes_ptr A pointer to the two-dimensional array (matrix) of node_t pointers.
+ */
 void SetRelations(struct node_t ***nodes_ptr);
 
+
+/**
+ * @brief Computes the cryptographic hash for each node in the Merkle tree.
+ *
+ * This function iterates through the Merkle tree and computes the hash for every node,
+ * typically by combining the hashes of its child nodes. The resulting hash is stored in the
+ * node's hash field. This process is essential for ensuring the integrity and security of the tree.
+ *
+ * @param nodes_ptr A pointer to the two-dimensional array (matrix) of node_t pointers.
+ */
 void HashNodes(struct node_t ***nodes_ptr);
 
+
+/**
+ * @brief Prints the entire Merkle tree structure.
+ *
+ * This function outputs the details of each node in the Merkle tree, organized by level.
+ * For every node, it prints the node's number, hash, and pointers to its parent and children.
+ * This is useful for debugging and verifying the tree's structure.
+ *
+ * @param nodes A pointer to the two-dimensional array (matrix) of node_t pointers representing the tree.
+ */
 void PrintMerkleTree(struct node_t ***nodes);
 
+
+/**
+ * @brief Prints the details of a single node.
+ *
+ * This function outputs the node's address, number, hash, and the addresses of its parent,
+ * left child, and right child. It is intended to provide detailed information about a specific node,
+ * which can be helpful during debugging.
+ *
+ * @param node The node to be printed.
+ */
 void PrintNode(struct node_t *node);
+
 /*-----------------------------------*
  * PRIVATE VARIABLES
  *-----------------------------------*/
@@ -61,30 +112,31 @@ void PrintNode(struct node_t *node);
 /*-----------------------------------*
  * PUBLIC FUNCTION DEFINITIONS
  *-----------------------------------*/
-void BuildMerkleTree(void)
+void BuildMerkleTree(const char *folder)
 {
     /* count the total number of files */
-    int n_files = CountFilesInFolder(TRANSACTIONS_FOLDER);
-    printf("\nN FILES: %d in folder" TRANSACTIONS_FOLDER "\n", n_files);
+    int n_files = CountFilesInFolder(folder);
+    // printf("\nN FILES: %d in folder %s\n", n_files, folder);
 
     /* prepare the tree:
        set an int array each with number of nodes in levels */
     int *nodes_number_arr = NULL;
     int tree_levels = NodesNumberArrayFromFile(&nodes_number_arr, n_files);
-    pIntArr(nodes_number_arr, tree_levels);
+    // pIntArr(nodes_number_arr, tree_levels);
 
     /* Allocate space for all the nodes */
     AllocateAllNodes(&nodes, nodes_number_arr, tree_levels);
-    PrintMerkleTree(nodes);
+    // PrintMerkleTree(nodes);
 
     if(nodes)
     {
         /* Set nodes relations */
-        printf("set relations \n");
+        // printf("set relations \n");
         SetRelations(nodes);
+        // PrintMerkleTree(nodes);
         /* Hash all the nodes */
-        printf("HashNodes \n");
-        HashNodes(nodes);
+        // printf("HashNodes \n");
+        // HashNodes(nodes);
     }
 
 
@@ -95,7 +147,6 @@ void BuildMerkleTree(void)
  *-----------------------------------*/
 void SetRelations(struct node_t ***nodes_ptr)
 {
-    bool no_children = true;
     struct node_t ***row; // point to array of ptrs node_t*
     struct node_t **col; // point to ptr node_t*
 
@@ -113,8 +164,8 @@ void SetRelations(struct node_t ***nodes_ptr)
                 /* calculate the distance on row */
                 int dist_r = col - row[0];
     
-                printf("\nAnalysed node:\n");
-                PrintNode(*col);
+                // printf("\nAnalysed node:\n");
+                // PrintNode(*col);
     
                 /* set parent */
                 /* check if anything above exists, using the
@@ -124,14 +175,14 @@ void SetRelations(struct node_t ***nodes_ptr)
                     /* the index is this distance / 2 
                     0/2 = 0, 1/2 = 0, 2/2 = 1, 3/2 = 1 etc etc
                     &row[+1][dist_r/2] -> take upper column, that node*/
-                    printf("Set as parent: \n");
-                    PrintNode(row[1][dist_r/2]);
+                    // printf("Set as parent: \n");
+                    // PrintNode(row[1][dist_r/2]);
                     (*col)->parent = row[1][dist_r/2];
                 }
                 /* set children */
     
                 /* if leaves */
-                if (no_children)
+                if (row == nodes_ptr)
                 {
                     (*col)->lchild = NULL;
                     (*col)->rchild = NULL;
@@ -145,35 +196,31 @@ void SetRelations(struct node_t ***nodes_ptr)
                     if (row[-1][dist_r*2])
                     {
                         (*col)->lchild = row[-1][dist_r*2];
-                        printf("Set as lchild: \n");
-                        PrintNode(row[-1][dist_r*2]);
+                        // printf("Set as lchild: \n");
+                        // PrintNode(row[-1][dist_r*2]);
                         /* The right child could NOT EXIST */
                         if (row[-1][dist_r*2 + 1])
                         {
                             (*col)->rchild = row[-1][dist_r*2 + 1];
-                            printf("Set as rchild: \n");
-                            PrintNode(row[-1][dist_r*2 + 1]);
+                            // printf("Set as rchild: \n");
+                            // PrintNode(row[-1][dist_r*2 + 1]);
                         }
                         else
                         {
-                            printf("NO RCHILDREN SET! \n");
+                            // printf("NO RCHILDREN SET! \n");
                         }
                     }
                     else
                     {
-                        printf("NO LCHILDREN SET! \n");
-                        printf("NO RCHILDREN SET! \n");
+                        // printf("NO LCHILDREN SET! \n");
+                        // printf("NO RCHILDREN SET! \n");
                     }
                 }
-
                 col++;
             }
-
-            no_children = false;
             row++;
         }
     }
-    
 }
 
 void HashNodes(struct node_t ***nodes_ptr)
@@ -247,24 +294,33 @@ void PrintMerkleTree(struct node_t ***nodes)
     }
 
     int level = 0;
-    // Iterate over each level until a NULL pointer is found.
     while (nodes[level] != NULL)
     {
-        // Determine how many nodes are in this level.
+        // Count nodes at this level.
         int count = 0;
         while (nodes[level][count] != NULL)
         {
             count++;
         }
         
-        // Print a header for the current level.
+        // Print level header.
         printf("Level %d (%d node%s):\n", level, count, count == 1 ? "" : "s");
 
-        // Print each node in this level.
+        // Print each node in the current level.
         for (int i = 0; i < count; i++)
         {
-            printf("Node %p %d: n = %d, hash = ", nodes[level][i], i, nodes[level][i]->number);
-            PrintHashHex(nodes[level][i]->hash);
+            struct node_t *node = nodes[level][i];
+            printf("  Node[%d] at %p:\n", i, (void*)node);
+            printf("    Number     : %d\n", node->number);
+            printf("    Hash       : ");
+            PrintHashHex(node->hash);
+            printf("\n");
+            if (node->parent)
+                printf("    Parent     : %p\n", (void*)node->parent);
+            if (node->lchild)
+                printf("    Left Child : %p\n", (void*)node->lchild);
+            if (node->rchild)
+                printf("    Right Child: %p\n", (void*)node->rchild);
         }
         printf("\n");
         level++;

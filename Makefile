@@ -1,35 +1,47 @@
-# Compiler and flags
+# Compiler and common flags
 CC = gcc
-CFLAGS = -Wall -Werror -g -Iinc
-LDFLAGS = -lcrypto  # OpenSSL library
+COMMON_CFLAGS = -Wall -Werror -Iinc
+COMMON_LDFLAGS = -lcrypto
 
-# Source and object files
-SRC_FILES = main.c src/node.c src/merkleTree.c src/utils.c
-OBJ_FILES = main.o src/node.o src/merkleTree.o src/utils.o
+# Normal Build: Debug version (for production or regular debugging)
+NORMAL_CFLAGS = $(COMMON_CFLAGS) -g
+NORMAL_LDFLAGS = $(COMMON_LDFLAGS)
 
-TARGET = merkleTree
+# Test Debug Build: No optimization, debugging enabled (could include extra test macros)
+TEST_DBG_CFLAGS = $(COMMON_CFLAGS) -g -DTEST_BUILD
+TEST_DBG_LDFLAGS = $(COMMON_LDFLAGS)
 
-# Default rule: Build the executable
-all: $(TARGET)
+# Test Fast Build: Optimized for speed
+TEST_FAST_CFLAGS = $(COMMON_CFLAGS) -O2 -DTEST_BUILD
+TEST_FAST_LDFLAGS = $(COMMON_LDFLAGS)
 
-# Compile object files from source files
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+# Source files for the main application and tests.
+# Here, the normal build uses main.c as entry point,
+# while the test builds use src/tests.c as the entry point.
+MAIN_SRC = main.c src/utils.c src/node.c src/merkleTree.c
+TEST_SRC = src/tests.c src/utils.c src/node.c src/merkleTree.c
 
-# Explicit rules for object files in src/
-src/node.o: src/node.c
-	$(CC) $(CFLAGS) -c src/node.c -o src/node.o
+# Executable targets
+NORMAL_TARGET = merkleTree
+TEST_DBG_TARGET = test_dbg
+TEST_FAST_TARGET = test_fast
 
-src/merkleTree.o: src/merkleTree.c
-	$(CC) $(CFLAGS) -c src/merkleTree.c -o src/merkleTree.o
+.PHONY: all test_dbg test_fast clean
 
-src/utils.o: src/utils.c
-	$(CC) $(CFLAGS) -c src/utils.c -o src/utils.o
+# Default target: Normal Build.
+all: $(NORMAL_TARGET)
 
-# Link object files to create the final executable
-$(TARGET): $(OBJ_FILES)
-	$(CC) $(CFLAGS) $(OBJ_FILES) -o $(TARGET) $(LDFLAGS)
+$(NORMAL_TARGET): $(MAIN_SRC)
+	$(CC) $(NORMAL_CFLAGS) $(MAIN_SRC) -o $(NORMAL_TARGET) $(NORMAL_LDFLAGS)
 
-# Clean compiled files
+# Test Debug Build: compiles with debug flags and without optimization.
+test_dbg: $(TEST_SRC)
+	$(CC) $(TEST_DBG_CFLAGS) $(TEST_SRC) -o $(TEST_DBG_TARGET) $(TEST_DBG_LDFLAGS)
+
+# Test Fast Build: compiles with aggressive optimizations.
+test_fast: $(TEST_SRC)
+	$(CC) $(TEST_FAST_CFLAGS) $(TEST_SRC) -o $(TEST_FAST_TARGET) $(TEST_FAST_LDFLAGS)
+
+# Clean all generated executables.
 clean:
-	rm -f $(OBJ_FILES) $(TARGET)
+	rm -f $(NORMAL_TARGET) $(TEST_DBG_TARGET) $(TEST_FAST_TARGET)

@@ -9,6 +9,9 @@
  * INCLUDE FILES
  *-----------------------------------*/
 #include "inc/merkleTree.h"
+#ifdef TEST_BUILD
+#include "inc/tests.h"
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -27,6 +30,7 @@
  * PRIVATE MACROS
  *-----------------------------------*/
 #define MAIN_MENU_ROWS_N 4
+#define TRANSACTIONS_FOLDER "data/transactions/"
 
 /*-----------------------------------*
  * PRIVATE TYPEDEFS
@@ -74,9 +78,18 @@ char *mainMenu[MAIN_MENU_ROWS_N] =
 
 
 
-int main()
+int main(int argc, char **argv)
 {
-	while(DisplayMenu()){};	
+#ifdef TEST_BUILD
+    if (argc > 1 && strcmp(argv[1], "--test") == 0)
+    {
+        RunMerkleTreeTests();
+    }
+    else
+#endif
+    {
+        while(DisplayMenu()){};	
+    }
 	return 0;
 }
 
@@ -130,7 +143,7 @@ bool DisplayMenu()
 void GenerateMerkleTree()
 {
     printf("Initializing Merkle Tree...\n");
-    BuildMerkleTree();
+    BuildMerkleTree(TRANSACTIONS_FOLDER);
 }
 
 void ClearScreen()

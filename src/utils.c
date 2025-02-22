@@ -136,7 +136,7 @@ void PrintHashBinary(const unsigned char hash[SHA256_DIGEST_LENGTH])
     printf("\n");  // New line for readability
 }
 
-int CountFilesInFolder(char *folder_path)
+int CountFilesInFolder(const char *folder_path)
 {
     /* files counter */
     int count = 0;
@@ -179,7 +179,7 @@ int NodesNumberArrayFromFile(int **nodes_number_arr, int n_files)
         {
             n_row++;
             n_nodes = (n_nodes + 1) / 2;  // if odd, round up before halving
-            printf("n_row = %d, n_nodes = %d\n", n_row, n_nodes);
+            // printf("n_row = %d, n_nodes = %d\n", n_row, n_nodes);
         }
         /* account for the root node */
         n_row++;
