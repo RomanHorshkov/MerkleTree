@@ -28,8 +28,6 @@ Produces `merkleTree_test_dbg` (from `main_tests.c`) with debug symbols.
 - **Test Fast**:  
 Produces `merkleTree_test_fast` (from `main_tests.c`) but optimized (`-O2`).
 
-Clean up build outputs:
-
 ### Cleaning Up
 To remove compiled files, use:
 ```
