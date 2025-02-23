@@ -27,7 +27,6 @@
  * PRIVATE MACROS
  *-----------------------------------*/
 #define MAIN_MENU_ROWS_N 4
-#define TRANSACTIONS_FOLDER "data/transactions/"
 
 /*-----------------------------------*
  * PRIVATE TYPEDEFS
@@ -75,10 +74,11 @@ char *mainMenu[MAIN_MENU_ROWS_N] =
 
 
 
-int main(int argc, char **argv)
+int main()
 {
+    while(DisplayMenu())
     {
-        while(DisplayMenu()){};	
+
     }
 	return 0;
 }
@@ -133,7 +133,7 @@ bool DisplayMenu()
 void GenerateMerkleTree()
 {
     printf("Initializing Merkle Tree...\n");
-    BuildMerkleTree(TRANSACTIONS_FOLDER);
+    BuildMerkleTree();
 }
 
 void ClearScreen()

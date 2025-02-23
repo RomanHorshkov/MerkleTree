@@ -46,6 +46,6 @@ extern struct node_t ***nodes;                 /* nodes of the tree */
  * @brief builds the merkleTree
  * does all the memory management
 */
-void BuildMerkleTree(const char *folder);
+void BuildMerkleTree();
 
 #endif /* MERKLE_TREE_H */

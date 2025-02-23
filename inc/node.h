@@ -11,13 +11,8 @@
 /*-----------------------------------*
  * INCLUDE FILES
  *-----------------------------------*/
-#include <stdint.h> // for uin8_t
+#include <stdint.h> 		/* uin8_t */
 #include <openssl/sha.h>
-
-
-/* Future work:
- * Instead of using separate structs for leaves, internal nodes, and the root, you can define a generic node structure with pointers to children and a parent. This will simplify the tree traversal and memory management.
- */
 
 /*-----------------------------------*
  * PUBLIC DEFINES
@@ -50,17 +45,6 @@ struct node_t {
 /*-----------------------------------*
  * PUBLIC FUNCTION PROTOTYPES
  *-----------------------------------*/
-// /**
-//  * @brief 
-//  * @param [out] d
-//  * @param [out] h
-//  * @param [out] m
-//  * @retval TRUE     Success
-//  * @retval FALSE    Error
-//  */
-// /**
-//  * @brief try to hash :D 
-//  */
-// void TryToHash(unsigned char output[SHA256_DIGEST_LENGTH]);
+/* None */
 
 #endif /* MERKLE_NODE_H */

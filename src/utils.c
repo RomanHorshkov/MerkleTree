@@ -10,6 +10,8 @@
 #include <openssl/evp.h>
 #include <string.h>
 #include <dirent.h>
+#include <sys/stat.h> /* stat */
+
 
 /*-----------------------------------*
  * PUBLIC VARIABLE DEFINITIONS
@@ -83,10 +85,15 @@ bool HashFile(const char *filename, unsigned char output[SHA256_DIGEST_LENGTH])
                 ret = true;
             }
         }
+        /* Close the file before returning */
+        fclose(file);
+    }
+    else
+    {
+        perror("HashFile: Unable to open file");
+        printf("file failed: %s\n", filename);
     }
 
-    /* Close the file before returning */
-    fclose(file);
 
     return ret; /* Return whether the hashing was successful */
 }
@@ -113,35 +120,52 @@ bool HashTwoHashes(const unsigned char hashA[SHA256_DIGEST_LENGTH],
     return ret;
 }
 
-void PrintHashHex(const unsigned char hash[SHA256_DIGEST_LENGTH])
+bool HashNodeFromChildren(struct node_t** parent)
 {
-    /* Iterate through hash bytes */
-    for (int i = 0; i < SHA256_DIGEST_LENGTH; i++)
+    printf(" - HashNodeFromChildren - \nparent:\n");
+    PrintNode(*parent);
+
+    bool ret = true;
+
+/* HERE SOME MORE LOGIC IS NEEDED!!! */
+/* NEED TO TREAT WHEN THERE IS NO R CHILD*/
+
+    /* Validate input parameters */
+    if (!parent) 
     {
-        /* Print each byte in two-digit hex format */
-        printf("%02x", hash[i]);
+        ret = false;
+        perror("HashNodeFromChildren: parent == NULL ");
     }
-    /* New line for readability */
-    printf("\n");
+    else if ((*parent)->lchild == NULL)
+    {
+        ret = false;
+        perror("HashNodeFromChildren: Lchild == NULL ");
+    }
+    else if ((*parent)->lchild == NULL)
+    {
+        perror("HashNodeFromChildren: parent == NULL ");
+    }
+    else if (!HashTwoHashes((*parent)->lchild->hash,
+                           (*parent)->rchild->hash,
+                           (*parent)->hash));
+    {
+        ret = false;
+        perror("HashNodeFromChildren: HashTwoHashes failed ");
+    }
+
+    printf("parent after children hashing :\n");
+    PrintNode(*parent);
+
+    return ret;
 }
 
-void PrintHashBinary(const unsigned char hash[SHA256_DIGEST_LENGTH])
+int CountFilesInDirectory(const char *file_name)
 {
-    for (int i = 0; i < SHA256_DIGEST_LENGTH; i++) {  // Iterate through hash bytes
-        for (int j = 7; j >= 0; j--) {  // Iterate over each bit (MSB to LSB)
-            printf("%d", (hash[i] >> j) & 1);  // Print each bit
-        }
-        printf(" ");  // Space between bytes for readability
-    }
-    printf("\n");  // New line for readability
-}
+    /* open the directory */
+    DIR *dir = opendir(file_name);
 
-int CountFilesInFolder(const char *folder_path)
-{
     /* files counter */
     int count = 0;
-    /* open the directory */
-    DIR *dir = opendir(folder_path);
     if (dir)
     {
         struct dirent *entry;
@@ -161,7 +185,6 @@ int CountFilesInFolder(const char *folder_path)
         }
     }
 
-    closedir(dir);
     return count;
 }
 
@@ -210,9 +233,105 @@ int NodesNumberArrayFromFile(int **nodes_number_arr, int n_files)
         }
     }
     
-
-    
     return ret;
+}
+
+bool isValidFile(const char *filename)
+{
+    bool ret = false;
+    struct stat buffer;
+
+    if (stat(filename, &buffer) == 0)
+    {
+        printf("File exists: %s\n", filename);
+        ret = true;
+    }
+    else
+    {
+        printf("File does not exist: %s\n", filename);
+    }
+
+    return ret;
+}
+
+/* ######################################################################
+ * PRINT FUNCTIONS 
+###################################################################### */
+
+void PrintMerkleTree(struct node_t ***nodes)
+{
+    if (nodes == NULL)
+    {
+        printf("Merkle tree is empty.\n");
+        return;
+    }
+
+    int level = 0;
+    while (nodes[level] != NULL)
+    {
+        // Count nodes at this level.
+        int count = 0;
+        while (nodes[level][count] != NULL)
+        {
+            count++;
+        }
+        
+        // Print level header.
+        printf("Level %d (%d node%s):\n", level, count, count == 1 ? "" : "s");
+
+        // Print each node in the current level.
+        for (int i = 0; i < count; i++)
+        {
+            struct node_t *node = nodes[level][i];
+            printf("  Node[%d] at %p:\n", i, (void*)node);
+            printf("    Number     : %d\n", node->number);
+            printf("    Hash       : ");
+            PrintHashHex(node->hash);
+            printf("\n");
+            if (node->parent)
+                printf("    Parent     : %p\n", (void*)node->parent);
+            if (node->lchild)
+                printf("    Left Child : %p\n", (void*)node->lchild);
+            if (node->rchild)
+                printf("    Right Child: %p\n", (void*)node->rchild);
+        }
+        printf("\n");
+        level++;
+    }
+}
+
+void PrintHashHex(const unsigned char hash[SHA256_DIGEST_LENGTH])
+{
+    /* Iterate through hash bytes */
+    for (int i = 0; i < SHA256_DIGEST_LENGTH; i++)
+    {
+        /* Print each byte in two-digit hex format */
+        printf("%02x", hash[i]);
+    }
+    /* New line for readability */
+    printf("\n");
+}
+
+void PrintHashBinary(const unsigned char hash[SHA256_DIGEST_LENGTH])
+{
+    for (int i = 0; i < SHA256_DIGEST_LENGTH; i++) {  // Iterate through hash bytes
+        for (int j = 7; j >= 0; j--) {  // Iterate over each bit (MSB to LSB)
+            printf("%d", (hash[i] >> j) & 1);  // Print each bit
+        }
+        printf(" ");  // Space between bytes for readability
+    }
+    printf("\n");  // New line for readability
+}
+
+void PrintNode(struct node_t *node)
+{
+    if (node)
+    {
+        printf("Node %p: number = %d, hash = ", node, node->number);
+        PrintHashHex(node->hash);
+        printf("rchild = %p, lchild = %p, parent = %p\n",
+                node->rchild, node->lchild, node->parent);
+    }
 }
 
 void pIntArr(int *arr, int size)
