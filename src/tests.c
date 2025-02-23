@@ -32,37 +32,59 @@ int numFolders = 0;
  * PRIVATE FUNCTION PROTOTYPES
  *-----------------------------------*/
 /**
- * @brief Runs a single test on the specified folder and prints performance metrics.
+ * @brief Measures execution time and system resource usage for a test run.
  *
- * @param fp File pointer for logging results.
- * @param folder The directory containing transaction files.
+ * This function constructs a Merkle tree from a specified folder, tracks
+ * elapsed time, CPU usage, and memory consumption, then logs the results.
+ *
+ * @param fp File pointer for logging test results.
+ * @param folder Directory containing transaction files for the test.
  */
 static void run_test(FILE *fp, const char *folder);
 
 /**
- * @brief Prints the process memory usage statistics from /proc/self/status.
+ * @brief Prints process memory usage statistics from `/proc/self/status`.
+ *
+ * This function extracts memory usage metrics such as peak virtual memory,
+ * resident set size, and swap usage, then logs them to the results file.
  *
  * @param fp File pointer for logging results.
  */
 static void printProcSelfStatus(FILE *fp);
 
 /**
- * @brief Prints system information (CPU, RAM, OS details).
+ * @brief Logs system hardware and OS information.
  *
- * @param fp File pointer for logging results.
+ * This function records details such as CPU model, available RAM, system uptime,
+ * and kernel version to provide context for performance analysis.
+ *
+ * @param fp File pointer for logging system details.
  */
 static void PrintSysInfo(FILE *fp);
 
+/**
+ * @brief Prints a formatted banner for test results.
+ *
+ * This function writes a visually distinct header to the results file,
+ * marking the start of the Merkle tree test results section.
+ *
+ * @param fp File pointer to the results file.
+ */
 static void PrintBanner(FILE *fp);
 
 /**
- * @brief Computes the difference in milliseconds between two timeval structures.
+ * @brief Computes the time difference in milliseconds between two `timeval` structures.
  *
- * @param start Pointer to the starting timeval.
- * @param end Pointer to the ending timeval.
- * @return double The time difference in milliseconds.
+ * @param start Pointer to the start time.
+ * @param end Pointer to the end time.
+ * @return The time difference in milliseconds.
  */
 static double timeval_diff_ms(struct timeval *start, struct timeval *end);
+
+/*-----------------------------------*
+ * PRIVATE VARIABLES
+ *-----------------------------------*/
+/* None */
 
 /*-----------------------------------*
  * PUBLIC FUNCTION DEFINITIONS
@@ -78,7 +100,7 @@ void RunMerkleTreeTests(void)
         /* Print system info to file */
         PrintSysInfo(fp);
         /* Run the tests */
-        for (int i = 0; i < numFolders; i++)
+        for (int i = 0; i < (numFolders); i++)
         {
             run_test(fp, folders[i].folder);
         }

@@ -142,11 +142,6 @@ bool HashNodeFromChildren(struct node_t** node)
     else if ((*node)->lchild == NULL)
     {
         /* copy the left brother's hash */
-        printf("HashNodeFromChildren: Lchild == NULL; copy bro's hash\n");
-        printf("src:\n");
-        PrintNode((*node)->parent->lchild);
-        printf("dst:\n");
-        PrintNode(*node);
         memcpy((*node)->hash, (*node)->parent->lchild->hash, SHA256_DIGEST_LENGTH);
     }
     /* If ONLY right node is null something has gone
@@ -155,16 +150,12 @@ bool HashNodeFromChildren(struct node_t** node)
     {
         fprintf(stderr, "HashNodeFromChildren: Rchild == NULL ");
     }
-    else if (!HashTwoHashes((*node)->lchild->hash,
+    else if (HashTwoHashes((*node)->lchild->hash,
                            (*node)->rchild->hash,
                            (*node)->hash))
     {
-        ret = false;
-        fprintf(stderr, "HashNodeFromChildren: HashTwoHashes failed ");
+        ret = true;
     }
-
-    printf("HashNodeFromChildren :node after hash:\n");
-    PrintNode(*node);
 
     return ret;
 }
@@ -198,8 +189,10 @@ int CountFilesInDirectory(const char *file_name)
     return count;
 }
 
-int NodesNumberArrayFromFile(int **nodes_number_arr, int n_files)
+int NodesNumberArrayFromFile(int **nodes_number_arr, const char *folder)
 {
+    int n_files = CountFilesInDirectory(folder);
+    printf("\nN FILES: %d in folder %s\n", n_files, folder);
     int ret = 0;
     int n_row = 0;
 
@@ -253,7 +246,6 @@ bool isValidFile(const char *filename)
 
     if (stat(filename, &buffer) == 0)
     {
-        printf("File exists: %s\n", filename);
         ret = true;
     }
     else

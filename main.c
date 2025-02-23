@@ -23,18 +23,32 @@
  * PRIVATE DEFINES
  *-----------------------------------*/
 /* None */
+
 /*-----------------------------------*
  * PRIVATE MACROS
  *-----------------------------------*/
 #define MAIN_MENU_ROWS_N 4
+#define TRANSACTIONS_FOLDER "data/transactions/"
 
 /*-----------------------------------*
  * PRIVATE TYPEDEFS
  *-----------------------------------*/
 /* None */
+
 /*-----------------------------------*
  * PRIVATE FUNCTION PROTOTYPES
  *-----------------------------------*/
+
+/**
+ * @brief Entry point for the Merkle Tree menu application.
+ *
+ * Initializes and displays the main menu, then waits
+ * for user interaction to build or check a Merkle Tree.
+ *
+ * @return 0 on successful exit.
+ */
+int main();
+
 /**
  * @brief displays the user menu to
  * manage the merkle tree.
@@ -68,12 +82,6 @@ char *mainMenu[MAIN_MENU_ROWS_N] =
 /*-----------------------------------*
  * PRIVATE FUNCTION DEFINITIONS
  *-----------------------------------*/
-
-
-/* PRIVATE FUNCTIONS DECLARATIONS */
-
-
-
 int main()
 {
     while(DisplayMenu())
@@ -83,7 +91,6 @@ int main()
 	return 0;
 }
 
-/* PRIVATE FUNCTIONS DEFINITIONS */
 bool DisplayMenu()
 {
 	bool ret = true;
@@ -133,7 +140,7 @@ bool DisplayMenu()
 void GenerateMerkleTree()
 {
     printf("Initializing Merkle Tree...\n");
-    BuildMerkleTree();
+    BuildMerkleTree(TRANSACTIONS_FOLDER);
 }
 
 void ClearScreen()

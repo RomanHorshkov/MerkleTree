@@ -37,32 +37,41 @@
 /*-----------------------------------*
  * PRIVATE FUNCTION PROTOTYPES
  *-----------------------------------*/
-/**
- * @brief Reads test specifications from a file.
- *
- * Reads the number of files to generate from `test_spec.txt`
- * and initializes folder configurations.
- */
 
-static bool readTestSpecifications(void);
 /**
- * @brief Generates test files required for testing.
+ * @brief Reads test specifications from a configuration file.
  *
- * This function invokes a Python script (`genFiles.py`) to create
- * necessary transaction files for the Merkle tree tests.
+ * This function reads the number of test files from a predefined configuration
+ * file and initializes folder structures accordingly.
+ *
+ * @retval true if the configuration file is successfully read.
+ * @retval false if the file cannot be opened or parsed.
+ */
+static bool readTestSpecifications(void);
+
+/**
+ * @brief Generates test files for Merkle tree testing.
+ *
+ * This function creates dummy transaction files in specified folders
+ * to simulate real-world data input for Merkle tree construction.
  */
 static void generateFiles(void);
 
 /**
  * @brief Removes generated test files after testing.
  *
- * This function invokes a Python script (`rmFiles.py`) to clean up
- * the generated files post-test execution.
+ * This function deletes the generated transaction files and directories
+ * to ensure a clean environment after test execution.
  */
 static void removeFiles(void);
 
 // static void PrintResultsFromFile(void);
 // static void PrintBanner(void);
+
+/*-----------------------------------*
+ * PRIVATE VARIABLES
+ *-----------------------------------*/
+/* None */
 
 /*-----------------------------------*
  * PUBLIC FUNCTION DEFINITIONS
@@ -104,7 +113,7 @@ static bool readTestSpecifications(void)
         {
             snprintf(folders[numFolders].folder,
                      sizeof(folders[numFolders].folder),
-                     "data/transactions_%d",
+                     "data/transactions_%d/",
                      folders[numFolders].num_files);
             numFolders++;
         }

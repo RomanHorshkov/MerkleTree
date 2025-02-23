@@ -58,10 +58,11 @@ extern int numFolders;
  * PUBLIC FUNCTION PROTOTYPES
  *-----------------------------------*/
 /**
- * @brief Runs performance and functionality tests for the Merkle tree engine.
+ * @brief Runs performance and functionality tests for the Merkle tree.
  *
- * This function executes a series of tests using different
- * datasets (folders) and prints performance metrics.
+ * This function iterates over test folders, constructs a Merkle tree
+ * for each dataset, and records performance metrics such as execution time
+ * and memory usage.
  */
 void RunMerkleTreeTests(void);
 
