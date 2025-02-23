@@ -3,38 +3,6 @@
 ## Overview
 This project implements a Merkle tree to efficiently verify the integrity of a dataset. A Merkle tree is a cryptographic data structure that provides a secure and efficient way to validate large data sets by storing hashes in a hierarchical structure.
 
-## Directory Structure
-```
-merkle_tree/
-│
-├── data/                # Folder to store data files
-│   ├── root_hash.txt    # Stores the Merkle tree root hash
-│   └── transactions/    # Directory containing transaction files
-│       ├── block1.txt
-│       ├── block2.txt
-│       ├── block3.txt
-│       └── block4.txt
-│
-├── inc/                 # Header files
-│   ├── node.h
-|   ├── tests.h
-|   ├── node.h
-│   ├── merkleTree.h
-|   └── utils.h
-│
-├── src/                 # Source files
-│   ├── merkleTree.c     # Implements Merkle tree operations
-│   ├── tests.c          # Implements tests
-│   ├── node.c           # Implements node-related functions
-│   └── utils.c          # Implements node-related functions
-│
-├── main.c               # Main program to build and test the Merkle tree
-├── Makefile             # Compilation instructions
-├── test_spec.txt        # Tests specifications
-├── tests_results.txt    # Tests outcomes
-└── README.md            # Documentation
-```
-
 ## Features
 
 - Builds a Merkle Tree from multiple transaction files.
@@ -103,6 +71,38 @@ Check `tests_results.txt` for timing and resource usage (RSS, page faults, etc.)
 ## License
 
 This project is licensed under the terms of the MIT license.
+
+
+## Directory Structure
+```
+merkle_tree/
+│
+├── data/                # Folder to store data files
+│   ├── root_hash.txt    # Stores the Merkle tree root hash
+│   └── transactions/    # Directory containing transaction files
+│       ├── block1.txt
+│       ├── block2.txt
+│       ├── block3.txt
+│       └── block4.txt
+│
+├── inc/                 # Header files
+│   ├── merkleTree.h
+│   ├── node.h
+|   ├── tests.h
+|   └── utils.h
+│
+├── src/                 # Source files
+│   ├── merkleTree.c     # Implements Merkle tree operations
+│   ├── node.c           # Implements node-related functions
+│   ├── tests.c          # Implements tests
+│   └── utils.c          # Implements node-related functions
+│
+├── main.c               # Main program to build and test the Merkle tree
+├── Makefile             # Compilation instructions
+├── test_spec.txt        # Tests specifications
+├── tests_results.txt    # Tests outcomes
+└── README.md            # Documentation
+```
 
 ## File Descriptions
 ### main.c
