@@ -104,57 +104,67 @@ bool HashTwoHashes(const unsigned char hashA[SHA256_DIGEST_LENGTH],
 {
     bool ret = false;
 
-    unsigned char combined[2 * SHA256_DIGEST_LENGTH];  // Buffer to hold concatenated hashes
-    memcpy(combined, hashA, SHA256_DIGEST_LENGTH);     // Copy first hash into buffer
-    memcpy(combined + SHA256_DIGEST_LENGTH, hashB, SHA256_DIGEST_LENGTH); // Copy second hash
-
-    EVP_MD_CTX *mdctx = EVP_MD_CTX_new();  // Create a new message digest context
+    /* Buffer to hold concatenated hashes */
+    unsigned char combined[2 * SHA256_DIGEST_LENGTH];
+    /* Copy first and second hash into buffer */
+    memcpy(combined, hashA, SHA256_DIGEST_LENGTH);
+    memcpy(combined + SHA256_DIGEST_LENGTH, hashB, SHA256_DIGEST_LENGTH);
+    /* Create a new message digest context */
+    EVP_MD_CTX *mdctx = EVP_MD_CTX_new();
     if (mdctx)
     {
-        EVP_DigestInit_ex(mdctx, EVP_sha256(), NULL);           // Initialize SHA-256 hashing
-        EVP_DigestUpdate(mdctx, combined, sizeof(combined));    // Update hash with concatenated data
-        EVP_DigestFinal_ex(mdctx, output, NULL);                // Finalize and store result in output
-        EVP_MD_CTX_free(mdctx);                                 // Free allocated memory for digest context
-        ret = true;
+        unsigned int output_length = 0;  // Store actual hash length
+
+        if (EVP_DigestInit_ex(mdctx, EVP_sha256(), NULL) &&
+            EVP_DigestUpdate(mdctx, combined, sizeof(combined)) &&
+            EVP_DigestFinal_ex(mdctx, output, &output_length))
+        {
+            /* Ensure correct hash length */
+            ret = (output_length == SHA256_DIGEST_LENGTH);
+        }
+
+        /* Free allocated memory */
+        EVP_MD_CTX_free(mdctx);
     }
     return ret;
 }
 
-bool HashNodeFromChildren(struct node_t** parent)
+bool HashNodeFromChildren(struct node_t** node)
 {
-    printf(" - HashNodeFromChildren - \nparent:\n");
-    PrintNode(*parent);
-
-    bool ret = true;
-
-/* HERE SOME MORE LOGIC IS NEEDED!!! */
-/* NEED TO TREAT WHEN THERE IS NO R CHILD*/
+    bool ret = false;
 
     /* Validate input parameters */
-    if (!parent) 
+    if (!node) 
+    {
+        fprintf(stderr, "HashNodeFromChildren: node == NULL ");
+    }
+    /* If the left node is null copy prev hash*/
+    else if ((*node)->lchild == NULL)
+    {
+        /* copy the left brother's hash */
+        printf("HashNodeFromChildren: Lchild == NULL; copy bro's hash\n");
+        printf("src:\n");
+        PrintNode((*node)->parent->lchild);
+        printf("dst:\n");
+        PrintNode(*node);
+        memcpy((*node)->hash, (*node)->parent->lchild->hash, SHA256_DIGEST_LENGTH);
+    }
+    /* If ONLY right node is null something has gone
+    terribly wrong */
+    else if ((*node)->rchild == NULL)
+    {
+        fprintf(stderr, "HashNodeFromChildren: Rchild == NULL ");
+    }
+    else if (!HashTwoHashes((*node)->lchild->hash,
+                           (*node)->rchild->hash,
+                           (*node)->hash))
     {
         ret = false;
-        perror("HashNodeFromChildren: parent == NULL ");
-    }
-    else if ((*parent)->lchild == NULL)
-    {
-        ret = false;
-        perror("HashNodeFromChildren: Lchild == NULL ");
-    }
-    else if ((*parent)->lchild == NULL)
-    {
-        perror("HashNodeFromChildren: parent == NULL ");
-    }
-    else if (!HashTwoHashes((*parent)->lchild->hash,
-                           (*parent)->rchild->hash,
-                           (*parent)->hash));
-    {
-        ret = false;
-        perror("HashNodeFromChildren: HashTwoHashes failed ");
+        fprintf(stderr, "HashNodeFromChildren: HashTwoHashes failed ");
     }
 
-    printf("parent after children hashing :\n");
-    PrintNode(*parent);
+    printf("HashNodeFromChildren :node after hash:\n");
+    PrintNode(*node);
 
     return ret;
 }

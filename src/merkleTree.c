@@ -163,17 +163,18 @@ void SetRelations()
         /* get advantage of the null terminated array */
         while (*row != NULL)
         {
-            col = row[0]; // pointer to ptr node_t* in the row array
+            /* pointer to ptr node_t* in the row array */
+            col = row[0];
             /* get advantage of the null terminated array */
             while (*col != NULL)
             {
                 /* calculate the distance on row */
                 int dist_r = col - row[0];
     
-                // printf("\nAnalysed node:\n");
-                // PrintNode(*col);
+                printf("\nAnalysed node:\n");
+                PrintNode(*col);
     
-                /* set parent */
+                /* SET PARENT */
                 /* check if anything above exists, using the
                 null terminated array */
                 if (row[1])
@@ -181,12 +182,12 @@ void SetRelations()
                     /* the index is this distance / 2 
                     0/2 = 0, 1/2 = 0, 2/2 = 1, 3/2 = 1 etc etc
                     &row[+1][dist_r/2] -> take upper column, that node*/
-                    // printf("Set as parent: \n");
-                    // PrintNode(row[1][dist_r/2]);
+                    PrintNode(row[1][dist_r/2]);
                     (*col)->parent = row[1][dist_r/2];
+                    printf("Set as parent: \n");
                 }
-                /* set children */
     
+                /* SET CHILDREN */
                 /* if leaves */
                 if (row == nodes)
                 {
@@ -198,28 +199,30 @@ void SetRelations()
                     /* the index is this distance / 2 
                     0*2 = 0, 1*2 = 2, 2*2 = 4, 3*2 = 6 etc etc
                     &row[-1][dist_r/2] -> take upper column, that node*/
-                    /* The left child could NOT EXIST */
+
+                    /* left and right children could NOT EXISTS 
+                    for the nodes added with copied hash to complete row */
                     if (row[-1][dist_r*2])
                     {
+                        printf("Set as lchild: \n");
+                        PrintNode(row[-1][dist_r*2]);
                         (*col)->lchild = row[-1][dist_r*2];
-                        // printf("Set as lchild: \n");
-                        // PrintNode(row[-1][dist_r*2]);
                         /* The right child could NOT EXIST */
                         if (row[-1][dist_r*2 + 1])
                         {
+                            printf("Set as rchild: \n");
+                            PrintNode(row[-1][dist_r*2 + 1]);
                             (*col)->rchild = row[-1][dist_r*2 + 1];
-                            // printf("Set as rchild: \n");
-                            // PrintNode(row[-1][dist_r*2 + 1]);
                         }
                         else
                         {
-                            // printf("NO RCHILDREN SET! \n");
+                            printf("NO RCHILDREN SET! \n");
                         }
                     }
                     else
                     {
-                        // printf("NO LCHILDREN SET! \n");
-                        // printf("NO RCHILDREN SET! \n");
+                        printf("NO LCHILDREN SET! \n");
+                        printf("NO RCHILDREN SET! \n");
                     }
                 }
                 col++;
@@ -242,16 +245,17 @@ void HashNodes()
     {
         /* continue hashing the other nodes */
         row++;
-        col = row[0];
-        while (row)
+        while (*row)
         {
-            while (col)
+            col = row[0];
+            while (*col != NULL)
             {
+                printf("HashNodes :parent before hash:\n");
+                PrintNode(*col);
                 HashNodeFromChildren(col);
                 col++;
             }
             row++;
-            col = row[0];
         }
     }
 }
