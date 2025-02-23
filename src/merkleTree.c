@@ -9,8 +9,6 @@
  * INCLUDE FILES
  *-----------------------------------*/
 #include "../inc/merkleTree.h"
-#include "../inc/node.h"
-#include "../inc/utils.h"
 
 /*-----------------------------------*
  * PUBLIC VARIABLE DEFINITIONS

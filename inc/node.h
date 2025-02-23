@@ -11,8 +11,8 @@
 /*-----------------------------------*
  * INCLUDE FILES
  *-----------------------------------*/
-#include <stdint.h> 		/* uin8_t */
-#include <openssl/sha.h>
+#include <openssl/sha.h>                /* SHA-256 hashing */
+#include <stdint.h>                     /* for uint8_t */
 
 /*-----------------------------------*
  * PUBLIC DEFINES

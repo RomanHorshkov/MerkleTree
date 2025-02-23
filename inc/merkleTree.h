@@ -11,12 +11,7 @@
 /*-----------------------------------*
  * INCLUDE FILES
  *-----------------------------------*/
-#include "../inc/node.h"                /* Node structure */
-#include <stdbool.h>                    /* booleans */
-#include <dirent.h>                     /* for counting files */
-#include <stdint.h>                     /* for uint8_t*/
-#include <string.h>                     /* for strings */
-#include <openssl/evp.h>                /* EVP API for SHA-256 */
+#include "../inc/utils.h"               /* utilities */
 
 /*-----------------------------------*
  * PUBLIC DEFINES

@@ -3,6 +3,7 @@
         "tests.h": "c",
         "merkletree.h": "c",
         "stdio.h": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "node.h": "c"
     }
 }

@@ -12,13 +12,13 @@ OS Information
 Hardware Information
   CPU Cores : 12
   RAM Total : 7869 MB
-  RAM Free  : 5629 MB
+  RAM Free  : 6056 MB
   Processor : Intel(R) Core(TM) i7-8750H CPU @ 2.20GHz
   RAM Speed : Run `sudo dmidecode -t memory`
 -----------------------------------
 System Uptime & Load
-  Uptime    : 20 hours 13 min 39 sec
-  Load Avg  : 0.41, 0.28, 0.21
+  Uptime    : 0 hours 59 min 35 sec
+  Load Avg  : 0.17, 0.09, 0.09
 -----------------------------------
 
 --------------------------------------------------------------------------------------------
@@ -28,21 +28,21 @@ VmPeak:               8572 Peak virtual memory size
 VmSize:               8180 Total virtual memory size
 VmLck:                   0 Locked memory (not swapped)
 VmPin:                   0 Pinned memory (for real-time processes)
-VmHWM:                5584 Peak resident set size (high-water mark)
-VmRSS:                5452 Resident Set Size (actual RAM usage)
+VmHWM:                5436 Peak resident set size (high-water mark)
+VmRSS:                5304 Resident Set Size (actual RAM usage)
 VmData:                536 Size of data segment (heap, malloc)
 VmStk:                 136 Size of stack segment
 VmExe:                  12 Size of text (code) segment
 VmLib:                5024 Size of shared libraries
-VmPTE:                  60 Page table entries size
+VmPTE:                  56 Page table entries size
 VmSwap:                  0 Swapped-out memory size
 --------------------------------------------------------------------------------------------
 FOLDER                         ELAPSED (ms)     USER CPU      SYS CPU MAX RSS (KB)
 --------------------------------------------------------------------------------------------
-data/transactions_4096/               49.94         0.00        48.43         5584
+data/transactions_4096/               49.26        19.43        28.29         5436
 --------------------------------------------------------------------------------------------
 Min Page Faults      Maj Page Faults       Blocks In      Blocks Out
-227                                0               0               0
+224                                0               0               0
 --------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------
 Memory Metric   Value (kB) Description                             
@@ -51,18 +51,18 @@ VmPeak:               8672 Peak virtual memory size
 VmSize:               8256 Total virtual memory size
 VmLck:                   0 Locked memory (not swapped)
 VmPin:                   0 Pinned memory (for real-time processes)
-VmHWM:                5712 Peak resident set size (high-water mark)
-VmRSS:                5576 Resident Set Size (actual RAM usage)
+VmHWM:                5564 Peak resident set size (high-water mark)
+VmRSS:                5428 Resident Set Size (actual RAM usage)
 VmData:                612 Size of data segment (heap, malloc)
 VmStk:                 136 Size of stack segment
 VmExe:                  12 Size of text (code) segment
 VmLib:                5024 Size of shared libraries
-VmPTE:                  60 Page table entries size
+VmPTE:                  56 Page table entries size
 VmSwap:                  0 Swapped-out memory size
 --------------------------------------------------------------------------------------------
 FOLDER                         ELAPSED (ms)     USER CPU      SYS CPU MAX RSS (KB)
 --------------------------------------------------------------------------------------------
-data/transactions_4097/               49.66         9.69        38.47         5712
+data/transactions_4097/               44.33        28.59        14.64         5564
 --------------------------------------------------------------------------------------------
 Min Page Faults      Maj Page Faults       Blocks In      Blocks Out
 106                                0               0               0
@@ -74,18 +74,18 @@ VmPeak:              10452 Peak virtual memory size
 VmSize:               8908 Total virtual memory size
 VmLck:                   0 Locked memory (not swapped)
 VmPin:                   0 Pinned memory (for real-time processes)
-VmHWM:                7420 Peak resident set size (high-water mark)
-VmRSS:                6100 Resident Set Size (actual RAM usage)
+VmHWM:                7272 Peak resident set size (high-water mark)
+VmRSS:                5952 Resident Set Size (actual RAM usage)
 VmData:               1264 Size of data segment (heap, malloc)
 VmStk:                 136 Size of stack segment
 VmExe:                  12 Size of text (code) segment
 VmLib:                5024 Size of shared libraries
-VmPTE:                  64 Page table entries size
+VmPTE:                  56 Page table entries size
 VmSwap:                  0 Swapped-out memory size
 --------------------------------------------------------------------------------------------
 FOLDER                         ELAPSED (ms)     USER CPU      SYS CPU MAX RSS (KB)
 --------------------------------------------------------------------------------------------
-data/transactions_16384/             184.27       136.75        41.91         7420
+data/transactions_16384/             180.18        58.34       116.88         7272
 --------------------------------------------------------------------------------------------
 Min Page Faults      Maj Page Faults       Blocks In      Blocks Out
 517                                0               0               0
@@ -97,18 +97,18 @@ VmPeak:              10476 Peak virtual memory size
 VmSize:               8256 Total virtual memory size
 VmLck:                   0 Locked memory (not swapped)
 VmPin:                   0 Pinned memory (for real-time processes)
-VmHWM:                7420 Peak resident set size (high-water mark)
-VmRSS:                5576 Resident Set Size (actual RAM usage)
+VmHWM:                7272 Peak resident set size (high-water mark)
+VmRSS:                5428 Resident Set Size (actual RAM usage)
 VmData:                612 Size of data segment (heap, malloc)
 VmStk:                 136 Size of stack segment
 VmExe:                  12 Size of text (code) segment
 VmLib:                5024 Size of shared libraries
-VmPTE:                  60 Page table entries size
+VmPTE:                  56 Page table entries size
 VmSwap:                  0 Swapped-out memory size
 --------------------------------------------------------------------------------------------
 FOLDER                         ELAPSED (ms)     USER CPU      SYS CPU MAX RSS (KB)
 --------------------------------------------------------------------------------------------
-data/transactions_16385/             188.45        77.61       105.13         7420
+data/transactions_16385/             179.62        68.07       107.07         7272
 --------------------------------------------------------------------------------------------
 Min Page Faults      Maj Page Faults       Blocks In      Blocks Out
 393                                0               0               0

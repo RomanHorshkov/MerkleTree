@@ -6,12 +6,8 @@
 /*-----------------------------------*
  * INCLUDE FILES
  *-----------------------------------*/
-#include "../inc/utils.h"
-#include <openssl/evp.h>
-#include <string.h>
-#include <dirent.h>
-#include <sys/stat.h> /* stat */
 
+ #include "../inc/utils.h"
 
 /*-----------------------------------*
  * PUBLIC VARIABLE DEFINITIONS

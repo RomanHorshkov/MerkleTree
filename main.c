@@ -9,10 +9,6 @@
  * INCLUDE FILES
  *-----------------------------------*/
 #include "inc/merkleTree.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
 
 /*-----------------------------------*
  * PUBLIC VARIABLE DEFINITIONS
