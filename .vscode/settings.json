@@ -5,5 +5,13 @@
         "stdio.h": "c",
         "stdlib.h": "c",
         "node.h": "c"
-    }
+    },
+    "unittestbot.deployment.utbotHost": "localhost",
+    "unittestbot.deployment.utbotPort": 2121,
+    "unittestbot.deployment.remotePath": "/home/roman/MerkleTree",
+    "unittestbot.paths.buildDirectory": "build",
+    "unittestbot.paths.cmakeOptions": [
+        "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+        "-DCMAKE_EXPORT_LINK_COMMANDS=ON"
+    ]
 }

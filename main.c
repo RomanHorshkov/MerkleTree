@@ -24,7 +24,7 @@
  * PRIVATE MACROS
  *-----------------------------------*/
 #define MAIN_MENU_ROWS_N 4
-#define TRANSACTIONS_FOLDER "data/transactions/"
+#define TRANSACTIONS_FOLDER "../data/transactions/"
 
 /*-----------------------------------*
  * PRIVATE TYPEDEFS
